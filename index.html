@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>localhub</title>
+    <meta
+      name="description"
+      content="Overview of all local dev servers: scans localhost ports in your browser and lists what is running where."
+    />
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <main class="app">
+      <h1>localhub</h1>
+      <p class="subtitle">
+        Shows which local ports currently serve a web page.
+      </p>
+
+      <div class="bar">
+        <input
+          id="ports"
+          type="text"
+          spellcheck="false"
+          aria-label="Ports"
+          placeholder="e.g. 3000-3010, 5173, 8000-8100"
+        />
+        <button type="button" id="scan">Rescan</button>
+        <label><input id="auto" type="checkbox" /> every 5 s</label>
+      </div>
+      <div class="status" id="status"></div>
+      <div class="grid" id="grid"></div>
+
+      <details>
+        <summary>Notes</summary>
+        <p>
+          The scan runs entirely in your browser (<code>fetch</code> to
+          <code>http://localhost:PORT</code>), nothing is sent to a server.
+          Chrome and Edge may ask once for permission to access local network
+          devices, allow it. Safari blocks HTTP requests from HTTPS pages, so
+          open the page locally there. The title is only shown if the dev server
+          allows CORS (Vite and webpack-dev-server usually do). Servers that
+          only speak HTTPS or no HTTP at all (databases etc.) are not detected.
+        </p>
+      </details>
+    </main>
+
+    <script type="module" src="/src/scripts/main.ts"></script>
+  </body>
+</html>
