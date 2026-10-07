@@ -2,7 +2,6 @@ import "../styles/style.css";
 import { DEFAULT_PORTS, parsePorts } from "./ports";
 import { scan, type Server } from "./scanner";
 
-const STORAGE_KEY = "ports";
 const AUTO_INTERVAL_MS = 5000;
 
 function byId<T extends HTMLElement>(id: string): T {
@@ -49,20 +48,27 @@ function render(servers: Server[]): void {
   grid.replaceChildren(...servers.map(card));
 }
 
-function loadPorts(): string {
-  try {
-    return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_PORTS;
-  } catch {
-    return DEFAULT_PORTS;
-  }
+/** Keeps the URL in sync so the current settings can be bookmarked. */
+function syncUrl(): void {
+  const params = new URLSearchParams();
+  const ports = portsInput.value.trim();
+  if (ports && ports !== DEFAULT_PORTS) params.set("ports", ports);
+  if (autoCheckbox.checked) params.set("auto", "1");
+  const query = params.toString();
+  history.replaceState(
+    null,
+    "",
+    `${location.pathname}${query ? `?${query}` : ""}`,
+  );
 }
 
-function savePorts(value: string): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, value);
-  } catch {
-    // storage unavailable: the setting just isn't remembered
-  }
+function setAuto(enabled: boolean): void {
+  autoCheckbox.checked = enabled;
+  window.clearInterval(timer);
+  timer = enabled
+    ? window.setInterval(() => void runScan(), AUTO_INTERVAL_MS)
+    : undefined;
+  syncUrl();
 }
 
 async function runScan(): Promise<void> {
@@ -71,7 +77,7 @@ async function runScan(): Promise<void> {
   scanButton.disabled = true;
 
   const ports = parsePorts(portsInput.value);
-  savePorts(portsInput.value);
+  syncUrl();
 
   const live: Server[] = [];
   const servers = await scan(
@@ -91,16 +97,13 @@ async function runScan(): Promise<void> {
   scanButton.disabled = false;
 }
 
-portsInput.value = loadPorts();
+const params = new URLSearchParams(location.search);
+portsInput.value = params.get("ports")?.trim() || DEFAULT_PORTS;
 scanButton.addEventListener("click", () => void runScan());
 portsInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") void runScan();
 });
-autoCheckbox.addEventListener("change", () => {
-  window.clearInterval(timer);
-  timer = autoCheckbox.checked
-    ? window.setInterval(() => void runScan(), AUTO_INTERVAL_MS)
-    : undefined;
-});
+autoCheckbox.addEventListener("change", () => setAuto(autoCheckbox.checked));
 
+setAuto(params.get("auto") === "1");
 void runScan();
