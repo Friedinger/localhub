@@ -12,6 +12,7 @@ function byId<T extends HTMLElement>(id: string): T {
 
 const portsInput = byId<HTMLInputElement>("ports");
 const scanButton = byId<HTMLButtonElement>("scan");
+const resetButton = byId<HTMLButtonElement>("reset");
 const autoCheckbox = byId<HTMLInputElement>("auto");
 const statusText = byId("status");
 const grid = byId("grid");
@@ -105,6 +106,11 @@ portsInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") void runScan();
 });
 autoCheckbox.addEventListener("change", () => setAuto(autoCheckbox.checked));
+resetButton.addEventListener("click", () => {
+  portsInput.value = DEFAULT_PORTS;
+  setAuto(false);
+  void runScan();
+});
 
 setAuto(params.get("auto") === "1");
 void runScan();
