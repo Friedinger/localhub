@@ -100,6 +100,7 @@ async function runScan(): Promise<void> {
 const params = new URLSearchParams(location.search);
 portsInput.value = params.get("ports")?.trim() || DEFAULT_PORTS;
 scanButton.addEventListener("click", () => void runScan());
+portsInput.addEventListener("input", syncUrl);
 portsInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") void runScan();
 });
