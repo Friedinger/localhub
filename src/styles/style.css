@@ -67,6 +67,12 @@ input[type="text"] {
   font: inherit;
 }
 
+input[type="text"]:hover,
+input[type="text"]:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
 button {
   padding: 8px 14px;
   border: 1px solid var(--border);
