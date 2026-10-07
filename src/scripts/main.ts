@@ -54,8 +54,9 @@ function syncUrl(): void {
   const params = new URLSearchParams();
   const ports = portsInput.value.trim();
   if (ports && ports !== DEFAULT_PORTS) params.set("ports", ports);
-  if (autoCheckbox.checked) params.set("auto", "1");
-  const query = params.toString();
+  const query = [params.toString(), autoCheckbox.checked ? "auto" : ""]
+    .filter(Boolean)
+    .join("&");
   history.replaceState(
     null,
     "",
@@ -112,5 +113,6 @@ resetButton.addEventListener("click", () => {
   void runScan();
 });
 
-setAuto(params.get("auto") === "1");
+const autoParam = params.get("auto");
+setAuto(autoParam !== null && autoParam !== "0" && autoParam !== "false");
 void runScan();
