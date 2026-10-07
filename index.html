@@ -27,7 +27,10 @@
         />
         <button type="button" id="scan">Rescan</button>
         <button type="button" id="reset">Reset</button>
-        <label><input id="auto" type="checkbox" /> Auto-rescan every 5 s</label>
+        <label class="toggle" title="Rescan every 5 seconds">
+          <input id="auto" type="checkbox" />
+          <span>Auto 5 s</span>
+        </label>
       </div>
       <div class="status" id="status"></div>
       <div class="grid" id="grid"></div>
