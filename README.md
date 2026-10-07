@@ -1,4 +1,4 @@
-# localhub
+# LocalHub
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=flat-square)](https://friedinger.github.io/localhub/)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Friedinger/localhub/build-deploy.yml?style=flat-square&label=Build%20and%20Deploy&color=lime)](https://github.com/Friedinger/localhub/actions/workflows/build-deploy.yml)
