@@ -82,7 +82,8 @@ async function runScan(): Promise<void> {
   syncUrl();
 
   const live: Server[] = [];
-  const servers = await scan(
+  statusText.textContent = `Scanning… 0/${ports.length}`;
+  const { servers, timedOut } = await scan(
     ports,
     (server) => {
       live.push(server);
@@ -94,7 +95,11 @@ async function runScan(): Promise<void> {
   );
 
   render(servers);
-  statusText.textContent = `${servers.length} server(s) found (${ports.length} ports checked, ${new Date().toLocaleTimeString()})`;
+  const blocked =
+    servers.length === 0 && timedOut > ports.length / 2
+      ? " – requests to localhost time out, your browser may be waiting for or blocking local network access"
+      : "";
+  statusText.textContent = `${servers.length} server(s) found (${ports.length} ports checked, ${new Date().toLocaleTimeString()})${blocked}`;
   scanning = false;
   scanButton.disabled = false;
 }
